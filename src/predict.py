@@ -8,14 +8,14 @@ def predict_email(email_text):
     um novo texto de e-mail.
     """
     
-    # --- 1. Definir Caminhos ---
+    #Definir Caminhos
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_DIR = os.path.dirname(BASE_DIR) # Raiz do projeto 'Detector de Spam'
 
     MODEL_PATH = os.path.join(ROOT_DIR, 'models', 'spam_model.pkl')
     VECTORIZER_PATH = os.path.join(ROOT_DIR, 'models', 'vectorizer.pkl')
 
-    # --- 2. Verificar se os arquivos de modelo existem ---
+    #Verificar se os arquivos de modelo existem
     if not os.path.exists(MODEL_PATH) or not os.path.exists(VECTORIZER_PATH):
         print("="*50)
         print("ERRO: Arquivos de modelo não encontrados!")
@@ -26,7 +26,7 @@ def predict_email(email_text):
         print("="*50)
         return
 
-    # --- 3. Carregar os Artefatos ---
+    #Carregar os Artefatos
     try:
         model = joblib.load(MODEL_PATH)
         vectorizer = joblib.load(VECTORIZER_PATH)
@@ -34,23 +34,22 @@ def predict_email(email_text):
         print(f"Erro ao carregar os arquivos de modelo: {e}")
         return
 
-    # --- 4. Processar o novo e-mail ---
-    # O modelo espera uma "lista" de documentos, então colocamos [email_text]
+    #Processar o novo e-mail
     email_bow = vectorizer.transform([email_text])
     
-    # --- 5. Fazer a Previsão ---
+    #Fazer a Previsão
     prediction = model.predict(email_bow)
     
-    # --- 6. Mostrar o Resultado ---
+    #Mostrar o Resultado
     print("\n--- [Resultado da Classificação] ---")
     if prediction[0] == 1:
         print(">> Resultado: É SPAM! 🔴")
     else:
-        print(">> Resultado: Não é Spam (Ham). ✅")
+        print(">> Resultado: Não é Spam! ✅")
     print("="*37 + "\n")
 
 
-# --- Padrão Python para executar o script ---
+#Padrão Python para executar o script
 if __name__ == "__main__":
     # sys.argv é a lista de argumentos do terminal.
     # sys.argv[0] é o nome do script (predict.py)

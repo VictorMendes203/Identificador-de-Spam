@@ -14,9 +14,9 @@ def train_model():
     
     print("--- [Iniciando Script de Treinamento] ---")
 
-    # --- 1. Definir Caminhos ---
+    #Definir Caminhos
     # __file__ é o caminho deste script (src/train.py)
-    # Queremos "subir" um nível para a raiz do projeto
+  
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_DIR = os.path.dirname(BASE_DIR) # Raiz do projeto 'Detector de Spam'
 
@@ -27,7 +27,7 @@ def train_model():
 
     print(f"Carregando dados de: {DATA_PATH}")
 
-    # --- 2. Carregar os Dados ---
+    #Carregar os Dados
     try:
         df = pd.read_csv(DATA_PATH, encoding='utf-8')
     except UnicodeDecodeError:
@@ -40,29 +40,27 @@ def train_model():
     X = df['text']
     y = df['spam'] 
 
-    # --- 4. Aplicar "Bag of Words" (Vetorização) ---
+    #Aplicar "Bag of Words" (Vetorização)
     print("Aplicando Bag of Words (CountVectorizer)...")
-    # IMPORTANTE: Aqui no treino, usamos .fit_transform()
+
     vectorizer = CountVectorizer()
     X_bow = vectorizer.fit_transform(X)
     
     print(f"Vocabulário criado com {X_bow.shape[1]} palavras únicas.")
 
-    # --- 5. Dividir em Treino e Teste ---
-    # Não precisamos mais do SVM, então vamos treinar o Naive Bayes com
-    # o dataset completo (ou quase)
-    # Para consistência e avaliação, ainda é bom dividir
+    #Dividir em Treino e Teste
+  
     X_train, X_test, y_train, y_test = train_test_split(
         X_bow, y, test_size=0.20, random_state=42
     )
 
-    # --- 6. Treinar o Classificador (Naive Bayes) ---
+    #Treinar o Classificador (Naive Bayes)
     print("Treinando o modelo Naive Bayes...")
     model = MultinomialNB()
     model.fit(X_train, y_train)
     print("Modelo treinado.")
 
-    # --- 7. Avaliar o Modelo (Bom para feedback) ---
+    #Avaliar o Modelo
     print("Avaliando modelo no set de teste...")
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
@@ -72,8 +70,8 @@ def train_model():
     print(classification_report(y_test, y_pred, target_names=['Ham (0)', 'Spam (1)']))
     print("="*40 + "\n")
 
-    # --- 8. Salvar os Artefatos ---
-    # Garantir que a pasta 'models' existe
+    #Salvar os Artefatos
+    
     os.makedirs(MODEL_DIR, exist_ok=True) 
     
     print(f"Salvando modelo em: {MODEL_PATH}")
